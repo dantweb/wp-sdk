@@ -3,10 +3,10 @@ FROM php:8.2-apache
 
 # Install dependencies and enable necessary PHP extensions
 RUN apt-get update && \
-    apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip curl less sendmail && \
+    apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip curl less sendmail openssl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd mysqli && \
-    a2enmod rewrite && \
+    a2enmod rewrite ssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -17,6 +17,13 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 # Create a non-root user
 RUN useradd -ms /bin/bash wordpressuser
+
+# Generate SSL certificates
+RUN mkdir /etc/apache2/ssl && \
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/apache2/ssl/localhost.key \
+    -out /etc/apache2/ssl/localhost.crt \
+    -subj "/CN=localhost.local"
 
 # Switch to the non-root user
 USER wordpressuser

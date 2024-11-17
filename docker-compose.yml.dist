@@ -5,6 +5,7 @@ services:
     container_name: php-apache
     ports:
       - "8080:80"
+       - "8443:443"
     volumes:
       - ./wordpress:/var/www/html
       - ./var:/var/log
