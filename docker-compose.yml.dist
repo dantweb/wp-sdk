@@ -1,7 +1,7 @@
 services:
   web:
     build:
-      context: ./containers/php
+      context: .
     container_name: php-apache
     ports:
       - "8080:80"
@@ -18,7 +18,7 @@ services:
 
   db:
     image: mysql:latest
-    container_name: mysql-book
+    container_name: wp-mysql
     ports:
       - "3306:3306"
     environment:
@@ -27,8 +27,15 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./var/containers/db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   db_data:
-    external: true
+
+
