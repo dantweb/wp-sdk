@@ -64,6 +64,8 @@ done
 # Check if WordPress is already installed
 if docker-compose exec web wp core is-installed; then
   if [ "$FORCE_INSTALL" == "yes" ]; then
+    docker-compose exec web rm /var/www/html/wp-config.php
+
     echo "Forcing WordPress installation..."
     ./receipes/wordpress/reset_db.sh
     docker-compose exec web wp core install \

@@ -7,4 +7,7 @@ down:
 	docker-compose down
 
 upp:
-	docker-compose up --build -d
+	docker-compose down && docker-compose up --build -d
+
+bash:
+	docker-compose exec web /bin/bash
